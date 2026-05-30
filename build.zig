@@ -18,7 +18,7 @@ pub fn build(b: *std.Build) void {
     b.installArtifact(zigglgen_exe);
 
     const run_zigglgen = b.addRunArtifact(zigglgen_exe);
-    run_zigglgen.addArgs(b.args orelse &.{});
+    if (@hasField(std.Build, "args")) run_zigglgen.addArgs(b.args orelse &.{}) else if (@hasDecl(std.Build.Step.Run, "addPassthruArgs")) run_zigglgen.addPassthruArgs() else unreachable;
     run_zigglgen.step.dependOn(b.getInstallStep());
 
     const run_step = b.step("run", "Run zigglgen");

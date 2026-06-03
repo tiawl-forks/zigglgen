@@ -70,7 +70,7 @@ pub fn generateBindingsSourceFile(b: *std.Build, options: GeneratorOptions) std.
 
 // TODO: Remove after 0.16
 fn captureStdOutAsGlDotZig(r: *std.Build.Step.Run) std.Build.LazyPath {
-    if (@typeInfo(@TypeOf(std.Build.Step.Run.captureStdOut)).@"fn".params.len == 1) {
+    if (@field(@typeInfo(@TypeOf(std.Build.Step.Run.captureStdOut)).@"fn", if (@hasDecl(std, "lang")) "param_types" else "params").len == 1) {
         const output = r.captureStdOut();
         r.captured_stdout.?.basename = "gl.zig";
         return output;

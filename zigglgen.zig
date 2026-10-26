@@ -113,7 +113,7 @@ const ApiVersionProfile = struct {
         switch (api) {
             .gl => {
                 // The Core/Compatibility profiles were introduced in GL 3.2.
-                if (version[0] < 3 or version[0] == 3 and version[1] < 2) {
+                if (version[0] < 3 or (version[0] == 3 and version[1] < 2)) {
                     if (maybe_profile != null) return error.UnsupportedProfile;
                     maybe_profile = .compatibility;
                 } else if (maybe_profile) |profile| switch (profile) {
@@ -268,7 +268,7 @@ fn resolveQuery(
     // Add/remove API features
     for (registry.apis) |reg_api| {
         if (reg_api.name != api) continue;
-        if (reg_api.version[0] > version[0] or reg_api.version[0] == version[0] and reg_api.version[1] > version[1]) continue;
+        if (reg_api.version[0] > version[0] or (reg_api.version[0] == version[0] and reg_api.version[1] > version[1])) continue;
         for (reg_api.remove) |feature| {
             std.debug.assert(feature.api == null);
             if (feature.profile != null and feature.profile != profile) continue;
@@ -739,8 +739,8 @@ fn renderCode(
         \\    fn getProcAddress(loader: anytype, prefixed_name: [:0]const u8) ?PROC {
         \\        const loader_info = @typeInfo(@TypeOf(loader));
         \\        const loader_is_fn =
-        \\            loader_info == .@"fn" or
-        \\            loader_info == .pointer and @typeInfo(loader_info.pointer.child) == .@"fn";
+        \\            (loader_info == .@"fn") or
+        \\            (loader_info == .pointer and @typeInfo(loader_info.pointer.child) == .@"fn");
         \\        if (loader_is_fn) {
         \\            return @as(?PROC, loader(@as([*:0]const u8, prefixed_name)));
         \\        } else {

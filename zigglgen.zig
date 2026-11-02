@@ -742,9 +742,9 @@ fn renderCode(
         \\            (loader_info == .@"fn") or
         \\            (loader_info == .pointer and @typeInfo(loader_info.pointer.child) == .@"fn");
         \\        if (loader_is_fn) {
-        \\            return @as(?PROC, loader(@as([*:0]const u8, prefixed_name)));
+        \\            return @as(?PROC, loader(@ptrCast(prefixed_name)));
         \\        } else {
-        \\            return @as(?PROC, loader.getProcAddress(@as([*:0]const u8, prefixed_name)));
+        \\            return @as(?PROC, loader.getProcAddress(@ptrCast(prefixed_name)));
         \\        }
         \\    }
         \\
